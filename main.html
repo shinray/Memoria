@@ -1,0 +1,359 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>memory_alpha</title>
+			<script src="libraries/p5.js" type="text/javascript"></script>
+			<script src="libraries/p5.dom.js" type="text/javascript"></script>
+			<script src="libraries/p5.sound.js" type="text/javascript"></script>
+			<script src="libraries/p5.play.js" type="text/javascript"></script>
+			<script src="memoria/sketch.js" type="text/javascript"></script>
+			<script>
+			    var choice1, choice2, choice3, choice4, yourage, yoursex, yourrace;
+                choice1 = "dummy";
+                choice2 = "dummy";
+                choice3 = "dummy";
+                choice4 = "dummy";
+                yourage = 0;
+                yoursex = "dummy";
+                yourrace = "dummy";
+                function start() 
+                {
+                    clear_all();
+                    loadScenePre();
+                    document.getElementById("nextzeroButton").style.display = "block";
+                    document.getElementById("startButton").style.display = "none";
+                }
+                function nextzero()
+                {
+                    //loadControls();
+                    clear_all();
+                    loadSceneZero();
+                    document.getElementById("nextzeroButton").style.display = "none";
+                    document.getElementById("nextButton").style.display = "block";
+                }
+                function next()
+                {
+                    clear_all();
+                    loadControls();
+                    loadSceneOne();
+                }
+                
+                function OneNext()
+                {
+                    clear_all();
+                    loadSceneTwo();
+                    document.getElementById("controls2").style.display = "block";
+                    document.getElementById("OneRightNextButton").style.display = "none";
+                    document.getElementById("OneWrongNextButton").style.display = "none";
+                }
+                function TwoNext()
+                {
+                    clear_all();
+                    loadSceneThree();
+                    document.getElementById("controls3").style.display = "block";
+                    document.getElementById("TwoRightNextButton").style.display = "none";
+                    document.getElementById("TwoWrongNextButton").style.display = "none";
+                }
+                function ThreeNext()
+                {
+                    clear_all();
+                    loadSceneFour();
+                    // document.getElementById("controls3").style.display = "block";
+                    document.getElementById("ThreeRightNextButton").style.display = "none";
+                    document.getElementById("ThreeWrongNextButton").style.display = "none";
+                    document.getElementById("feedback").style.display = "block";
+                }
+
+                
+                function setChoice1()
+                {
+                    var choices = document.getElementsByName("choice1");
+                	var i = 0;
+                    for (i = 0; i < choices.length; i++)
+                    {
+                    	if(choices[i].checked)
+                        	window.choice1=choices[i].value;
+                    }
+                    //document.getElementById("controls2").style.display = "block";
+                    document.getElementById("controls").style.display = "none";
+                    clear_all();
+                    if(window.choice1 == "c")
+                    {
+                        loadSceneOneRight();
+                        document.getElementById("OneRightNextButton").style.display = "block";
+                    }
+                    else {
+                        loadSceneOneWrong();
+                        document.getElementById("OneWrongNextButton").style.display = "block";
+                    }
+                }
+                function setChoice2()
+                {
+                    window.choice2 = document.getElementById("choice2in").value;
+                    //document.getElementById("controls3").style.display = "block";
+                    // document.getElementById("controls4").style.display = "block";
+                    document.getElementById("controls2").style.display = "none";
+                    clear_all();
+                    if(window.choice2 == "81411")
+                    {
+                        loadSceneTwoRight();
+                        document.getElementById("TwoRightNextButton").style.display = "block";
+                    }
+                    else {
+                        loadSceneTwoWrong();
+                        document.getElementById("TwoWrongNextButton").style.display = "block";
+                    }
+                }
+                function setChoice3()
+                {
+                    window.choice3 = document.getElementById("choice3in").value;
+                    window.choice4 = document.getElementById("choice4in").value;
+                    document.getElementById("controls3").style.display = "none";
+                    //document.getElementById("feedback").style.display = "block";
+                    clear_all();
+                    if(window.choice3 == "Puck" && window.choice4 == "Rufus")
+                    {
+                        loadSceneThreeRight();
+                        document.getElementById("ThreeRightNextButton").style.display = "block";
+                    }
+                    else {
+                        loadSceneThreeWrong();
+                        document.getElementById("ThreeWrongNextButton").style.display = "block";
+                    }
+                }
+                function setChoice4()
+                {
+                    var choices = document.getElementsByName("choice4");
+                	var i = 0;
+                    for (i = 0; i < choices.length; i++)
+                    {
+                    	if(choices[i].checked)
+                        	window.choice4=choices[i].value;
+                    }
+                    document.getElementById("feedback").style.display = "block";
+                    document.getElementById("controls4").style.display = "none";
+                    loadSceneFive();
+                }
+                function submitdata()
+                {
+                    window.yourage = document.getElementById("inputage").value;
+                    window.yoursex = document.getElementById("inputgender").value;
+                    window.yourrace = document.getElementById("inputrace").value;
+                    
+                    var xhttp = new XMLHttpRequest();
+                    var destURL = "telemetry.php";
+                    var params = "c1=" + choice1 + "&c2=" + choice2 + "&c3=" + choice3
+                    + "&c4=" + choice4 + "&age=" + yourage + "&sex=" + yoursex +
+                    "&race=" + yourrace;
+                    xhttp.open("POST",destURL,true);
+                    
+                    //set header
+                    xhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+                    // xhttp.setRequestHeader("Content-length",params.length);
+                    // xhttp.setRequestHeader("Connection","close");
+                    
+                    
+                    xhttp.onreadystatechange = function() {//Call a function when the state changes.
+                    	if(xhttp.readyState == 4 && xhttp.status == 200) {
+                    		//alert(xhttp.responseText);
+                    		console.log(xhttp.responseText);
+                    	}
+                    }
+                    xhttp.send(params);
+                    document.getElementById("feedback").style.display = "none";
+                    document.getElementById("goodbyemsg").style.display = "none";
+                    
+                //     var form = document.createElement("form");
+                // 	form.setAttribute("method","post");
+                // 	form.setAttribute("action","telemetry.php");
+                
+                // 	var c1field = document.createElement("input");
+                // 	c1field.setAttribute("type","hidden");
+                // 	c1field.setAttribute("name","c1");
+                // 	c1field.setAttribute("value",choice1);
+                // 	form.appendChild(c1field);
+                
+                // 	var c2field = document.createElement("input");
+                // 	c2field.setAttribute("type","hidden");
+                // 	c2field.setAttribute("name","c2");
+                // 	c2field.setAttribute("value",choice2);
+                // 	form.appendChild(c2field);
+                
+                // 	var c3field = document.createElement("input");
+                // 	c3field.setAttribute("type","hidden");
+                // 	c3field.setAttribute("name","c3");
+                // 	c3field.setAttribute("value",choice3);
+                // 	form.appendChild(c3field);
+                	
+                // 	var c4field = document.createElement("input");
+                // 	c4field.setAttribute("type","hidden");
+                // 	c4field.setAttribute("name","c4");
+                // 	c4field.setAttribute("value",choice4);
+                // 	form.appendChild(c4field);
+                	
+                // 	var afield = document.createElement("input");
+                // 	afield.setAttribute("type","hidden");
+                // 	afield.setAttribute("name","age");
+                // 	afield.setAttribute("value",yourage);
+                // 	form.appendChild(afield);
+                	
+                // 	var sfield = document.createElement("input");
+                // 	sfield.setAttribute("type","hidden");
+                // 	sfield.setAttribute("name","sex");
+                // 	sfield.setAttribute("value",yoursex);
+                // 	form.appendChild(sfield);
+                	
+                // 	var efield = document.createElement("input");
+                // 	efield.setAttribute("type","hidden");
+                // 	efield.setAttribute("name","race");
+                // 	efield.setAttribute("value",yourrace);
+                // 	form.appendChild(efield);
+                
+                // 	document.body.appendChild(form);
+                // 	form.submit();
+                }
+                function displayChoice1()
+    	        {
+    	            document.getElementById("demo").innerHTML = "choice1: " + window.choice1;
+    	        }
+    	        function displayChoice2()
+    	        {
+    	            document.getElementById("demo").innerHTML = "choice2: " + window.choice2;
+    	        }
+    	        function displayChoice3()
+    	        {
+    	            document.getElementById("demo").innerHTML = "choice3: " + window.choice3;
+    	        }
+    	       // function displayChoice4()
+    	       // {
+    	       //     document.getElementById("demo").innerHTML = "choice4: " + window.choice4;
+    	       // }
+        </script>
+    </head>
+	<body>
+	    <!--<div id="p5_loading" class="loadingclass"><img src=-->
+	    <!--    "memoria/camel.png"></div>-->
+	    <div id='myp5' align='center'></div>
+	    <div id="startButton" align='center' style="display: block">
+	        <button onclick="start()">Start</button>
+	    </div>
+	    <div id="nextButton" align='center' style="display: none">
+	        <p>Lorraine comes across a dark forest. She wonders how she will find her way through, when she sees a mysterious elf talking to himself, "The mountain path has 83,411 steps".</p>
+	        <p>He notices her and offers to guide her through the woods if she finds a certain kind of flower for him.</p>
+	        <p>The elf says, "My name is Puck and this is the flower I want.."</p><br>
+	        <img src="memoria/c.png"><br>
+	        <button onclick="next()">Next</button>
+	    </div>
+	    
+	    <div id="nextzeroButton" align='center' style="display: none">
+	        <p>Lorraine's little brother Ian has fallen ill to a mysterious disease and nothing is helping him get better.</p>
+	        <p>Lorraine has to go on a journey to find a cure.</p>
+	        <p>Lorraine promises Ian that she will return as soon as she can.</p>
+	        <button onclick="nextzero()">Next</button>
+	    </div>
+	    
+	    
+	    <div id="OneRightNextButton" align='center' style="display: none">
+	        <p>You chose correctly!</p>
+	        <p>The elf thanks Lorraine and guides her through the woods, saving her several days of confusion.</p>
+	        <button onclick="OneNext()">Great</button>
+	    </div>
+	    <div id="OneWrongNextButton" align='center' style="display: none">
+	        <p>You did not choose correctly!</p>
+	        <p>The elf looks disappointed and slowly walks away into the bushes, leaving Lorraine to find a path for herself..</p>
+	        <p>Lorraine's journey has been extended by 3 days! Ian is sad ):</p>
+	        <button onclick="OneNext()">I'm sorry</button>
+	    </div>
+	    
+	    
+	    <div id="TwoRightNextButton" align='center' style="display: none">
+	        <p>You answered correctly!</p>
+	        <p>The goat is impressed and takes Lorraine quickly up the mountain steps.</p>
+	        <p>Lorraine is grateful for all the goat's speed.</p>
+	        <button onclick="TwoNext()">I am smart</button>
+	    </div>
+	    <div id="TwoWrongNextButton" align='center' style="display: none">
+	        <p>You did not answer correctly!</p>
+	        <p>The goat kicks at Lorraine and leaves her to climb each step painfully and slowly.</p>
+	        <p>Lorraine's journey has been extended by 5 days! Ian is distraught! ):</p>
+	        <button onclick="TwoNext()">Wow</button>
+	    </div>
+	    
+	    
+	    <div id="ThreeRightNextButton" align='center' style="display: none">
+	        <p>You answered correctly!</p>
+	        <p>The camel is very impressed by your ability to remember information.</p>
+	        <p>She picks up Lorraine and swiftly carries her across the desert.</p>
+	        <button onclick="ThreeNext()">I am a computer</button>
+	    </div>
+	    <div id="ThreeWrongNextButton" align='center' style="display: none">
+	        <p>You did not answer correctly!</p>
+	        <p>The camel looks up at the hot sun and looks back down at Lorraine. The camel shakes her head and walks away wishing Lorraine "good luck crossing the desert".</p>
+	        <p>Lorraine's journey has been extended by 10 days! Ian wonders if he even has a sister ):</p>
+	        <button onclick="ThreeNext()">I'm trying my best..</button>
+	    </div>
+	    
+	    
+	    <div id="controls" align='center' style="display: none">
+	        <p>Choose the flower that the elf wanted:</p><br>
+	            <input type="radio" name="choice1" value="a"><img src="memoria/a.jpg"><br>
+                  <input type="radio" name="choice1" value="b"><img src="memoria/b.png"><br>
+                  <input type="radio" name="choice1" value="c"><img src="memoria/c.png"><br>
+                  <input type="radio" name="choice1" value="d"><img src="memoria/d.jpg"><br>
+                  <br>
+	            
+	        <button onclick="setChoice1()">Submit Q1</button>
+            
+	    </div>
+	    
+	    <div id="controls2" align='center' style="display: none">
+	        <p>Lorraine reaches the base of a huge mountain that has a winding staircase to the next part of the path.</p>
+	        <p>A goat appears to block her path, asking her how many steps the mountain staircase has.</p>
+	        <p>He says, "I am Rufus the goat and I will take you over the mountain if you answer correctly."</p><br>
+	        <p>How many steps does the mountain have?</p><br>
+	        choice2: <input type="text" id="choice2in"><br>
+	            
+	        <button onclick="setChoice2()">Submit Q2</button>
+            
+	    </div>
+	    <div id="controls3" align='center' style="display: none">
+	        <p>After passing the mountain, Lorraine discovers a desert.</p>
+	        <p>A camel offers to carry her across - only if she can correctly recall the names of his friends: the elf and the goat.</p>
+	        <p>What were the names of the elf and the goat?</p><br>
+	        Elf's name: <input type="text" id="choice3in"><br>
+	        Goat's name: <input type="text" id="choice4in"><br>
+	        <button onclick="setChoice3()">Submit Q3</button>
+            
+	    </div>
+	    <!--<div id="controls4" align='center' style="display: none">-->
+	        <!--<input type="radio" name="choice4" value="a" checked> choice a<br>-->
+         <!--         <input type="radio" name="choice4" value="b"> b<br>-->
+         <!--         <input type="radio" name="choice4" value="c"> c<br>-->
+         <!--         <input type="radio" name="choice4" value="d"> d<br>-->
+         <!--         <br>-->
+         
+                  <!--<button onclick="setChoice4()">setchoice4</button>-->
+            
+	    <!--</div>-->
+	    <div id="feedback" align='center' style="display: none">
+	        <p>Thank you for completing this activity. We would like to gather some anonymized information about you to help our research.</p>
+	        age: <input type="number" id="inputage">
+	         gender: <input type="text" id="inputgender">
+	        ethnicity: <input type="text" id="inputrace">
+	        
+	        <button onclick="submitdata()">submit data!</button>
+	    </div>
+	    <div id="goodbyemsg" align='center' style="display: none">
+	        Thanks for submitting your information! Our researchers are grateful.<br>
+	    </div>
+	    <div id="debugdisp" style="display: none">
+	        <button onclick="displayChoice1()">dispchoice1</button>
+	    <button onclick="displayChoice2()">dispchoice2</button>
+	    <button onclick="displayChoice3()">dispchoice3</button>
+	    <button onclick="displayChoice4()">dispchoice4</button>
+	    </div>
+	    
+	    <p id="demo"></p>
+	</body>
+</html>
